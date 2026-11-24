@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{fragmentos :: head('Proyectos')}"></head>
+<body>
+<header th:replace="~{fragmentos :: navAdmin('proyectos')}"></header>
+<main class="wrap adm">
+  <p class="eyebrow">Sección 03</p>
+  <h2>Proyectos <em>publicados.</em></h2>
+  <div th:replace="~{fragmentos :: avisos}"></div>
+
+  <form class="card formulario ancho" th:action="@{/admin/proyectos(_csrf=${_csrf.token})}" method="post" enctype="multipart/form-data">
+    <label>Título <input type="text" name="titulo" required maxlength="120"></label>
+    <label>Categoría o tecnología (ej. Spring Boot) <input type="text" name="categoria" maxlength="120"></label>
+    <label>Descripción <textarea name="descripcion" rows="3" maxlength="1000"></textarea></label>
+    <label>Dirección del proyecto (URL) <input type="url" name="url" placeholder="https://mi-proyecto.com"></label>
+    <label>Imagen de portada (opcional) <input type="file" name="imagen" accept=".png,.jpg,.jpeg,.webp,.gif"></label>
+    <div class="botones"><button class="btn oro" type="submit">Agregar proyecto</button></div>
+  </form>
+
+  <div class="grid3" style="margin-top:40px">
+    <article class="card" th:each="p : ${proyectos}">
+      <img th:if="${!#strings.isEmpty(p.imagen)}" th:src="@{/proyecto-imagen/{id}(id=${p.id})}" class="thumb" alt="">
+      <h3 th:text="${p.titulo}">Proyecto</h3>
+      <p class="suave" th:if="${!#strings.isEmpty(p.categoria)}" th:text="${p.categoria}"></p>
+      <p th:text="${p.descripcion}"></p>
+      <a class="ver" th:if="${!#strings.isEmpty(p.url)}" th:href="${p.url}" target="_blank" rel="noopener" th:text="${p.url}">url</a>
+      <form th:action="@{/admin/proyectos/{id}/eliminar(id=${p.id})}" method="post" onsubmit="return confirm('¿Eliminar este proyecto?')"><button class="lnk peligro">Eliminar</button></form>
+    </article>
+  </div>
+</main>
+</body>
+</html>

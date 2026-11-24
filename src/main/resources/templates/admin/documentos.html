@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{fragmentos :: head('Documentos')}"></head>
+<body>
+<header th:replace="~{fragmentos :: navAdmin('documentos')}"></header>
+<main class="wrap adm">
+  <p class="eyebrow">Trabajos de las semanas</p>
+  <h2>Subir <em>documentos.</em></h2>
+  <div th:replace="~{fragmentos :: avisos}"></div>
+
+  <form class="card formulario ancho" th:action="@{/admin/documentos(_csrf=${_csrf.token})}" method="post" enctype="multipart/form-data">
+    <label>Título del documento <input type="text" name="titulo" required maxlength="120"></label>
+    <fieldset>
+      <legend>Tipo de documento</legend>
+      <label class="opcion"><input type="radio" name="tipo" value="PDF" checked> PDF</label>
+      <label class="opcion"><input type="radio" name="tipo" value="Word"> Word</label>
+      <label class="opcion"><input type="radio" name="tipo" value="Excel"> Excel</label>
+    </fieldset>
+    <label>Archivo <input type="file" name="archivo" required accept=".pdf,.doc,.docx,.xls,.xlsx,.csv"></label>
+    <label>Asignar a semana
+      <select name="semana">
+        <option value="">Sin semana</option>
+        <option th:each="s : ${semanas}" th:value="${s.numero}" th:text="${'Semana ' + s.numero}"></option>
+      </select>
+    </label>
+    <label>Etiquetas (separadas por coma) <input type="text" name="etiquetas" maxlength="255"></label>
+    <label>Descripción <textarea name="descripcion" rows="3" maxlength="2000"></textarea></label>
+    <label class="opcion"><input type="checkbox" name="borrador" value="true"> Guardar como borrador (no se muestra en el sitio público)</label>
+    <div class="botones"><button class="btn oro" type="submit">Subir documento</button></div>
+  </form>
+
+  <h2 style="margin-top:64px;font-size:32px">Todos los <em>documentos.</em></h2>
+  <p class="suave" th:if="${#lists.isEmpty(documentos)}">Aún no has subido documentos.</p>
+  <div class="tabla-wrap" th:unless="${#lists.isEmpty(documentos)}">
+    <table>
+      <thead><tr><th>Título</th><th>Tipo</th><th>Semana</th><th>Tamaño</th><th>Fecha</th><th>Estado</th><th></th></tr></thead>
+      <tbody>
+        <tr th:each="d : ${documentos}">
+          <td th:text="${d.titulo}">Título</td>
+          <td><span class="icono mini" th:classappend="${d.claseTipo}" th:text="${d.tipo}">PDF</span></td>
+          <td th:text="${d.semana != null ? 'W' + d.semana : '—'}">W1</td>
+          <td th:text="${d.tamanoLegible}">1 MB</td>
+          <td th:text="${#temporals.format(d.fecha, 'dd/MM/yyyy')}">01/01/2026</td>
+          <td><span class="badge" th:classappend="${d.borrador} ? 'borr' : 'pub'" th:text="${d.borrador ? 'Borrador' : 'Publicado'}">Publicado</span></td>
+          <td class="acc">
+            <a th:href="@{/admin/archivo/{id}(id=${d.id})}">Descargar</a>
+            <form class="inline" th:action="@{/admin/documentos/{id}/estado(id=${d.id})}" method="post"><button class="lnk" th:text="${d.borrador ? 'Publicar' : 'Ocultar'}">Ocultar</button></form>
+            <form class="inline" th:action="@{/admin/documentos/{id}/eliminar(id=${d.id})}" method="post" onsubmit="return confirm('¿Eliminar este documento?')"><button class="lnk peligro">Eliminar</button></form>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+</body>
+</html>

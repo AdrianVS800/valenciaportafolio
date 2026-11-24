@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{fragmentos :: head('Semanas')}"></head>
+<body>
+<header th:replace="~{fragmentos :: navAdmin('semanas')}"></header>
+<main class="wrap adm">
+  <p class="eyebrow">Proceso académico</p>
+  <h2>Semanas y <em>documentos.</em></h2>
+  <p class="suave" style="margin-top:-12px;margin-bottom:24px">Edita cada semana y sube sus trabajos en Word, PDF o Excel. Puedes seleccionar varios archivos a la vez.</p>
+  <div th:replace="~{fragmentos :: avisos}"></div>
+
+  <div class="grid2">
+    <div class="card" th:each="s : ${semanas}" th:id="'semana-' + ${s.numero}">
+
+      <form class="formulario" th:action="@{/admin/semanas/{n}(n=${s.numero})}" method="post">
+        <span class="w" th:text="'W' + ${s.numero}">W1</span>
+        <label>Título <input type="text" name="titulo" th:value="${s.titulo}" maxlength="100" required></label>
+        <label>Descripción <textarea name="descripcion" rows="3" maxlength="1000" th:text="${s.descripcion}"></textarea></label>
+        <div><button class="btn oro peq" type="submit">Guardar semana</button></div>
+      </form>
+
+      <h4 class="sub-h">Documentos (<span th:text="${docsPorSemana.get(s.numero).size()}">0</span>)</h4>
+      <p class="suave" style="font-size:13px" th:if="${docsPorSemana.get(s.numero).isEmpty()}">Aún no hay documentos en esta semana.</p>
+      <ul class="docs-lista">
+        <li th:each="d : ${docsPorSemana.get(s.numero)}">
+          <span class="icono mini" th:classappend="${d.claseTipo}" th:text="${d.tipo}">PDF</span>
+          <span class="dt" th:text="${d.titulo}">Título</span>
+          <span class="badge" th:classappend="${d.borrador} ? 'borr' : 'pub'" th:text="${d.borrador ? 'Borrador' : 'Publicado'}">Publicado</span>
+          <span class="acc">
+            <a th:href="@{/admin/archivo/{id}(id=${d.id})}">Descargar</a>
+            <form class="inline" th:action="@{/admin/documentos/{id}/estado(id=${d.id})}" method="post">
+              <input type="hidden" name="volver" value="semanas">
+              <button class="lnk" th:text="${d.borrador ? 'Publicar' : 'Ocultar'}">Ocultar</button>
+            </form>
+            <form class="inline" th:action="@{/admin/documentos/{id}/eliminar(id=${d.id})}" method="post" onsubmit="return confirm('¿Eliminar este documento?')">
+              <input type="hidden" name="volver" value="semanas">
+              <button class="lnk peligro">Eliminar</button>
+            </form>
+          </span>
+        </li>
+      </ul>
+
+      <form class="formulario subida" th:action="@{/admin/semanas/{n}/documentos(n=${s.numero},_csrf=${_csrf.token})}" method="post" enctype="multipart/form-data">
+        <label>Subir documentos (Word, PDF o Excel)
+          <input type="file" name="archivos" multiple required accept=".pdf,.doc,.docx,.xls,.xlsx,.csv">
+        </label>
+        <label>Título (opcional, solo si subes un archivo)
+          <input type="text" name="titulo" maxlength="120" placeholder="Si lo dejas vacío se usa el nombre del archivo">
+        </label>
+        <label class="opcion"><input type="checkbox" name="borrador" value="true"> Guardar como borrador (oculto al público)</label>
+        <div><button class="btn oro peq" type="submit">Subir a la semana <span th:text="${s.numero}">1</span></button></div>
+      </form>
+    </div>
+  </div>
+</main>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{fragmentos :: head('Portafolio')}"></head>
+<body>
+<header th:replace="~{fragmentos :: navPublico}"></header>
+<main>
+
+  <!-- 01 PERFIL -->
+  <section id="sobre" class="sec mar perfil">
+    <div class="olas" aria-hidden="true"><div class="ola ola1"></div><div class="ola ola2"></div><div class="ola ola3"></div></div>
+    <div class="wrap perfil-in">
+      <div class="foto reveal">
+        <img th:if="${!#strings.isEmpty(cfg['foto'])}" th:src="@{/perfil-foto(v=${cfg['foto']})}" alt="Foto de perfil">
+        <div class="foto-vacia" th:if="${#strings.isEmpty(cfg['foto'])}" th:text="${#strings.substring(cfg['nombre'], 0, 1)}">A</div>
+      </div>
+      <div class="reveal" style="--i:2">
+        <p class="eyebrow">01 · Perfil</p>
+        <h1>Hola, soy <span th:text="${cfg['nombre']}">Adrian</span>.</h1>
+        <p class="texto" th:text="${cfg['perfil_texto']}"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 SEMANAS -->
+  <section id="semanas" class="sec mar">
+    <div class="olas" aria-hidden="true"><div class="ola ola1"></div><div class="ola ola2"></div><div class="ola ola3"></div></div>
+    <div class="wrap">
+      <p class="eyebrow reveal">02 · Proceso académico</p>
+      <h2 class="reveal">16 semanas de aprendizaje</h2>
+      <div class="grid-sem">
+        <a class="wk reveal" th:each="s, it : ${semanas}" th:href="@{/semana/{n}(n=${s.numero})}" th:style="'--i:' + ${it.index % 4}">
+          <span class="wn" th:text="'W' + ${s.numero}">W1</span>
+          <span class="wd" th:text="${s.descripcion}">Descripción</span>
+        </a>
+      </div>
+      <p class="centro reveal"><a class="pildora" href="/trabajos">Ver trabajos →</a></p>
+    </div>
+  </section>
+
+  <!-- 03 PROYECTOS -->
+  <section id="proyectos" class="sec mar">
+    <div class="olas" aria-hidden="true"><div class="ola ola1"></div><div class="ola ola2"></div><div class="ola ola3"></div></div>
+    <div class="wrap">
+      <p class="eyebrow reveal">03 · Proyectos</p>
+      <h2 class="reveal">Proyectos publicados</h2>
+      <p class="suave" th:if="${#lists.isEmpty(proyectos)}">Pronto habrá proyectos publicados aquí.</p>
+      <div class="grid-pj">
+        <article class="pj reveal" th:each="p, it : ${proyectos}" th:style="'--i:' + ${it.index % 3}">
+          <div class="pj-img">
+            <img th:if="${!#strings.isEmpty(p.imagen)}" th:src="@{/proyecto-imagen/{id}(id=${p.id})}" alt="" loading="lazy">
+          </div>
+          <div class="pj-cuerpo">
+            <h3 th:text="${p.titulo}">Proyecto</h3>
+            <p class="cat" th:if="${!#strings.isEmpty(p.categoria)}" th:text="${p.categoria}">Spring Boot</p>
+            <p class="desc" th:text="${p.descripcion}"></p>
+            <a class="ver" th:if="${!#strings.isEmpty(p.url)}" th:href="${p.url}" target="_blank" rel="noopener">Visitar →</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 HABILIDADES -->
+  <section id="habilidades" class="sec mar">
+    <div class="olas" aria-hidden="true"><div class="ola ola1"></div><div class="ola ola2"></div><div class="ola ola3"></div></div>
+    <div class="wrap">
+      <p class="eyebrow reveal">04 · Habilidades</p>
+      <h2 class="reveal">Lo que uso</h2>
+      <div class="skills">
+        <div class="reveal" style="--i:0">
+          <h4>Backend</h4>
+          <div class="tiles"><div class="tile" th:each="t : ${backend}"><span class="ico" th:text="${#strings.toUpperCase(#strings.substring(t, 0, 1))}">J</span><span th:text="${t}">Java</span></div></div>
+        </div>
+        <div class="reveal" style="--i:1">
+          <h4>Frontend</h4>
+          <div class="tiles"><div class="tile" th:each="t : ${frontend}"><span class="ico" th:text="${#strings.toUpperCase(#strings.substring(t, 0, 1))}">H</span><span th:text="${t}">HTML</span></div></div>
+        </div>
+        <div class="reveal" style="--i:2">
+          <h4>Tools</h4>
+          <div class="tiles"><div class="tile" th:each="t : ${tools}"><span class="ico" th:text="${#strings.toUpperCase(#strings.substring(t, 0, 1))}">G</span><span th:text="${t}">Git</span></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 CONTACTO -->
+  <section id="contacto" class="sec mar">
+    <div class="olas" aria-hidden="true"><div class="ola ola1"></div><div class="ola ola2"></div><div class="ola ola3"></div></div>
+    <div class="wrap">
+      <p class="eyebrow reveal">05 · Contacto</p>
+      <div class="contacto reveal">
+        <div class="aviso ok" th:if="${okContacto}" th:text="${okContacto}"></div>
+        <div class="aviso error" th:if="${errorContacto}" th:text="${errorContacto}"></div>
+        <form th:action="@{/contacto}" method="post" class="formulario">
+          <input type="text" name="nombre" placeholder="Nombre" required maxlength="120" aria-label="Nombre">
+          <input type="email" name="email" placeholder="Email" required maxlength="150" aria-label="Email">
+          <input type="text" name="asunto" placeholder="Asunto" maxlength="150" aria-label="Asunto">
+          <textarea name="mensaje" rows="4" placeholder="Mensaje" required maxlength="2000" aria-label="Mensaje"></textarea>
+          <button class="btn oro grande" type="submit">Enviar</button>
+        </form>
+      </div>
+      <div class="redes reveal">
+        <a th:if="${!#strings.isEmpty(cfg['github'])}" th:href="${cfg['github']}" target="_blank" rel="noopener" aria-label="GitHub">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-2c-3.2.7-3.87-1.37-3.87-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.03 1.76 2.69 1.25 3.35.96.1-.74.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.18-3.09-.12-.29-.51-1.46.11-3.04 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.78 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.58.23 2.75.11 3.04.74.81 1.18 1.83 1.18 3.09 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5Z"/></svg></a>
+        <a th:if="${!#strings.isEmpty(cfg['linkedin'])}" th:href="${cfg['linkedin']}" target="_blank" rel="noopener" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12ZM7.12 20.45H3.56V9h3.56v11.45Z"/></svg></a>
+        <a th:if="${!#strings.isEmpty(cfg['email'])}" th:href="'mailto:' + ${cfg['email']}" aria-label="Correo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="pie"><div class="wrap">© <span th:text="${#temporals.year(#temporals.createNow())}">2026</span> <span th:text="${cfg['nombre']}"></span>. Portafolio académico.</div></footer>
+</body>
+</html>

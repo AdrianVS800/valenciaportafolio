@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{fragmentos :: head('Mensajes')}"></head>
+<body>
+<header th:replace="~{fragmentos :: navAdmin('mensajes')}"></header>
+<main class="wrap adm">
+  <p class="eyebrow">Formulario de contacto</p>
+  <h2>Mensajes <em>recibidos.</em></h2>
+  <div th:replace="~{fragmentos :: avisos}"></div>
+  <p class="suave" th:if="${#lists.isEmpty(mensajes)}">Aún no has recibido mensajes.</p>
+  <div class="tabla-wrap" th:unless="${#lists.isEmpty(mensajes)}">
+    <table>
+      <thead><tr><th>Fecha</th><th>Nombre</th><th>Correo</th><th>Asunto</th><th>Mensaje</th><th></th></tr></thead>
+      <tbody>
+        <tr th:each="m : ${mensajes}">
+          <td th:text="${#temporals.format(m.fecha, 'dd/MM/yyyy HH:mm')}">fecha</td>
+          <td th:text="${m.nombre}">Nombre</td>
+          <td><a class="ver" th:href="'mailto:' + ${m.email}" th:text="${m.email}">correo</a></td>
+          <td th:text="${m.asunto}">Asunto</td>
+          <td style="min-width:260px;white-space:pre-wrap" th:text="${m.texto}">Mensaje</td>
+          <td class="acc"><form class="inline" th:action="@{/admin/mensajes/{id}/eliminar(id=${m.id})}" method="post" onsubmit="return confirm('¿Eliminar este mensaje?')"><button class="lnk peligro">Eliminar</button></form></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+</body>
+</html>

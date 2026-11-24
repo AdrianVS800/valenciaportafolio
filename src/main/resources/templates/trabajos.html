@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{fragmentos :: head('Trabajos')}"></head>
+<body>
+<header th:replace="~{fragmentos :: navPublico}"></header>
+<main>
+  <section class="sec mar pagina">
+    <div class="olas" aria-hidden="true"><div class="ola ola1"></div><div class="ola ola2"></div><div class="ola ola3"></div></div>
+    <div class="wrap">
+      <a class="ver" href="/#semanas">← Volver</a>
+      <p class="eyebrow" style="margin-top:28px">Trabajos</p>
+      <h2>Todos los trabajos</h2>
+      <p class="suave" th:if="${#lists.isEmpty(documentos)}">Aún no hay trabajos publicados.</p>
+      <div class="grid-doc">
+        <article class="doc reveal" th:each="d, it : ${documentos}" th:style="'--i:' + ${it.index % 3}">
+          <div class="icono" th:classappend="${d.claseTipo}" th:text="${d.tipo == 'Word' ? 'W' : (d.tipo == 'Excel' ? 'X' : 'PDF')}">PDF</div>
+          <h3 th:text="${d.titulo}">Trabajo</h3>
+          <p class="meta"><span th:if="${d.semana != null}" th:text="'W' + ${d.semana} + ' · '"></span><span th:text="${d.tamanoLegible}">1 MB</span> · <span th:text="${#temporals.format(d.fecha, 'dd/MM/yyyy')}">01/01/2026</span></p>
+          <a class="ver" th:href="@{/archivo/{id}(id=${d.id})}">Descargar →</a>
+        </article>
+      </div>
+    </div>
+  </section>
+</main>
+</body>
+</html>

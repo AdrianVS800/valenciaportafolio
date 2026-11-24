@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{fragmentos :: head('Acceso')}"></head>
+<body class="login-body">
+<main class="login">
+  <a href="/" class="brand"><span th:text="${cfg['nombre']}">EDUARDO</span><i>.</i></a>
+  <p class="eyebrow" style="margin-top:28px">Acceso al cPanel</p>
+  <h2 style="font-size:36px;margin-bottom:24px">Iniciar <em>sesión.</em></h2>
+  <div class="aviso error" th:if="${param.error}">Correo o contraseña incorrectos.</div>
+  <form th:action="@{/admin/login}" method="post" class="formulario">
+    <label>Correo
+      <input type="email" name="username" required autofocus autocomplete="username">
+    </label>
+    <label>Contraseña
+      <input type="password" name="password" required autocomplete="current-password">
+    </label>
+    <button class="btn oro grande" type="submit">Entrar</button>
+    <a href="/" class="ver">← Volver al sitio</a>
+  </form>
+</main>
+</body>
+</html>

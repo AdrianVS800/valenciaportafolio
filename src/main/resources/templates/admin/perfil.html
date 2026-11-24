@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{fragmentos :: head('Perfil')}"></head>
+<body>
+<header th:replace="~{fragmentos :: navAdmin('perfil')}"></header>
+<main class="wrap adm">
+  <p class="eyebrow">Contenido del sitio</p>
+  <h2>Editar <em>perfil.</em></h2>
+  <div th:replace="~{fragmentos :: avisos}"></div>
+
+  <form class="card formulario ancho" th:action="@{/admin/perfil(_csrf=${_csrf.token})}" method="post" enctype="multipart/form-data">
+
+    <div class="foto-admin">
+      <div class="foto-prev">
+        <img th:if="${!#strings.isEmpty(cfg['foto'])}" th:src="@{/perfil-foto(v=${cfg['foto']})}" alt="Foto actual">
+        <span th:if="${#strings.isEmpty(cfg['foto'])}" th:text="${#strings.substring(cfg['nombre'], 0, 1)}">A</span>
+      </div>
+      <div class="formulario" style="flex:1">
+        <label>Foto de inicio (círculo del perfil)
+          <input type="file" name="foto" accept=".png,.jpg,.jpeg,.webp,.gif">
+        </label>
+        <small class="suave">PNG, JPG, WEBP o GIF. Si no subes una, se conserva la actual.</small>
+        <label class="opcion" th:if="${!#strings.isEmpty(cfg['foto'])}"><input type="checkbox" name="quitarFoto" value="true"> Quitar la foto actual</label>
+      </div>
+    </div>
+
+    <label>Nombre (aparece en el logo y en "Hola, soy …") <input type="text" name="nombre" th:value="${cfg['nombre']}" required maxlength="40"></label>
+    <label>Descripción del perfil <textarea name="perfil_texto" rows="4" maxlength="800" th:text="${cfg['perfil_texto']}"></textarea></label>
+    <label>Habilidades Backend (separadas por coma) <input type="text" name="hab_backend" th:value="${cfg['hab_backend']}" maxlength="200"></label>
+    <label>Habilidades Frontend (separadas por coma) <input type="text" name="hab_frontend" th:value="${cfg['hab_frontend']}" maxlength="200"></label>
+    <label>Herramientas / Tools (separadas por coma) <input type="text" name="hab_tools" th:value="${cfg['hab_tools']}" maxlength="200"></label>
+    <label>Correo de contacto <input type="email" name="email" th:value="${cfg['email']}" maxlength="120"></label>
+    <label>GitHub (enlace, opcional) <input type="url" name="github" th:value="${cfg['github']}" placeholder="https://github.com/usuario"></label>
+    <label>LinkedIn (enlace, opcional) <input type="url" name="linkedin" th:value="${cfg['linkedin']}" placeholder="https://linkedin.com/in/usuario"></label>
+    <div class="botones"><button class="btn oro" type="submit">Guardar cambios</button></div>
+  </form>
+</main>
+</body>
+</html>

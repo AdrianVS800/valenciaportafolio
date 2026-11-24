@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{fragmentos :: head('Panel')}"></head>
+<body>
+<header th:replace="~{fragmentos :: navAdmin('resumen')}"></header>
+<main class="wrap adm">
+  <p class="eyebrow">Panel de control</p>
+  <h2>Hola, <em>admin.</em></h2>
+  <div class="grid3">
+    <a class="card" th:href="@{/admin/perfil}"><span class="w">Perfil</span><h3>Foto de inicio y textos</h3><p>Cambia la foto del círculo de inicio, tu descripción y tus habilidades.</p><span class="ver">Editar →</span></a>
+    <a class="card" th:href="@{/admin/documentos}"><span class="w">Documentos</span><h3 class="num" th:text="${totalDocs}">0</h3><p><span th:text="${publicados}">0</span> publicados en el sitio</p><span class="ver">Gestionar →</span></a>
+    <a class="card" th:href="@{/admin/proyectos}"><span class="w">Proyectos</span><h3 class="num" th:text="${totalProyectos}">0</h3><p>Mostrados en la sección 03</p><span class="ver">Gestionar →</span></a>
+    <a class="card" th:href="@{/admin/mensajes}"><span class="w">Mensajes</span><h3 class="num" th:text="${totalMensajes}">0</h3><p>Recibidos desde el formulario de contacto</p><span class="ver">Ver →</span></a>
+    <a class="card" th:href="@{/admin/semanas}"><span class="w">Semanas</span><h3 class="num">16</h3><p>Edita título y descripción de cada semana</p><span class="ver">Editar →</span></a>
+  </div>
+</main>
+</body>
+</html>

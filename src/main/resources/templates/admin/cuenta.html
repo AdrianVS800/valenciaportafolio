@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{fragmentos :: head('Cuenta')}"></head>
+<body>
+<header th:replace="~{fragmentos :: navAdmin('cuenta')}"></header>
+<main class="wrap adm">
+  <p class="eyebrow">Seguridad</p>
+  <h2>Mi <em>cuenta.</em></h2>
+  <div th:replace="~{fragmentos :: avisos}"></div>
+  <form class="card formulario ancho" th:action="@{/admin/cuenta}" method="post">
+    <p class="suave">Sesión iniciada como <strong th:text="${email}">correo</strong></p>
+    <label>Contraseña actual <input type="password" name="actual" required autocomplete="current-password"></label>
+    <label>Nueva contraseña (mínimo 8 caracteres) <input type="password" name="nueva" required minlength="8" autocomplete="new-password"></label>
+    <label>Confirmar nueva contraseña <input type="password" name="confirmar" required minlength="8" autocomplete="new-password"></label>
+    <div class="botones"><button class="btn oro" type="submit">Cambiar contraseña</button></div>
+  </form>
+</main>
+</body>
+</html>

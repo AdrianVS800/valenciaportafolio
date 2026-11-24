@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:fragment="head(titulo)">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="${titulo} + ' · ' + ${cfg['nombre']}">Portafolio</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/img/favicon-192.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+  <script>document.documentElement.classList.add('js')</script>
+  <link rel="stylesheet" href="/css/estilos.css">
+  <script src="/js/app.js" defer></script>
+</head>
+<body>
+
+<!-- Barra del sitio público -->
+<header th:fragment="navPublico" class="nav">
+  <div class="wrap nav-in">
+    <a href="/#sobre" class="brand"><span th:text="${cfg['nombre']}">Adrian</span>.</a>
+    <nav>
+      <a href="/#sobre">Sobre mí</a>
+      <a href="/#semanas">Semanas</a>
+      <a href="/#proyectos">Proyectos</a>
+      <a href="/#habilidades">Habilidades</a>
+      <a href="/#contacto">Contacto</a>
+      <a href="/admin" class="btn oro peq">Admin</a>
+    </nav>
+  </div>
+</header>
+
+<!-- Barra del panel de administración -->
+<header th:fragment="navAdmin(seccion)" class="nav">
+  <div class="wrap nav-in">
+    <a th:href="@{/admin}" class="brand"><span th:text="${cfg['nombre']}">Adrian</span>. <small class="tag">cPanel</small></a>
+    <nav>
+      <a th:href="@{/admin}" th:classappend="${seccion == 'resumen'} ? 'on'">Resumen</a>
+      <a th:href="@{/admin/semanas}" th:classappend="${seccion == 'semanas'} ? 'on'">Semanas</a>
+      <a th:href="@{/admin/documentos}" th:classappend="${seccion == 'documentos'} ? 'on'">Documentos</a>
+      <a th:href="@{/admin/proyectos}" th:classappend="${seccion == 'proyectos'} ? 'on'">Proyectos</a>
+      <a th:href="@{/admin/mensajes}" th:classappend="${seccion == 'mensajes'} ? 'on'">Mensajes</a>
+      <a th:href="@{/admin/perfil}" th:classappend="${seccion == 'perfil'} ? 'on'">Perfil</a>
+      <a th:href="@{/admin/cuenta}" th:classappend="${seccion == 'cuenta'} ? 'on'">Cuenta</a>
+      <a href="/" target="_blank">Ver sitio ↗</a>
+      <form th:action="@{/admin/logout}" method="post" class="inline"><button class="btn oro peq">Salir</button></form>
+    </nav>
+  </div>
+</header>
+
+<!-- Mensajes -->
+<div th:fragment="avisos">
+  <div class="aviso ok" th:if="${mensaje}" th:text="${mensaje}"></div>
+  <div class="aviso error" th:if="${error}" th:text="${error}"></div>
+</div>
+</body>
+</html>
